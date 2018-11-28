@@ -1,7 +1,13 @@
 package com.example.anuplal.movieapp.model.network;
 
+
+import com.example.anuplal.movieapp.pojo.Result;
 import com.example.anuplal.movieapp.pojo.TheatreResult;
 
+import java.util.List;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -36,7 +42,7 @@ public class ApiServiceProvider {
 
 
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/discover")
+                .baseUrl("https://api.themoviedb.org/3/discover/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -45,13 +51,13 @@ public class ApiServiceProvider {
         return retrofit;
     }
 
-    public void fetMoviesList(String apiKey) {
+    public LiveData<List<Result>> fetMoviesList(String apiKey) {
+        final MutableLiveData<List<Result>> data = new MutableLiveData<>();
 
-        Call<TheatreResult> allMoviesList = movieService.getAllMoviesList(apiKey);
-        allMoviesList.enqueue(new Callback<TheatreResult>() {
+        movieService.getAllMoviesList(apiKey).enqueue(new Callback<TheatreResult>() {
             @Override
             public void onResponse(Call<TheatreResult> call, Response<TheatreResult> response) {
-
+                data.setValue(response.body().getMovieList());
             }
 
             @Override
@@ -59,7 +65,7 @@ public class ApiServiceProvider {
 
             }
         });
-
+        return data;
 
     }
 }

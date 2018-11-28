@@ -1,8 +1,6 @@
 package com.example.anuplal.movieapp.model;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.view.Display;
 
 import com.example.anuplal.movieapp.model.network.ApiServiceProvider;
 import com.example.anuplal.movieapp.model.persistance.AppDatabase;
@@ -10,6 +8,8 @@ import com.example.anuplal.movieapp.pojo.FavouriteMovie;
 import com.example.anuplal.movieapp.pojo.Result;
 
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
 
 public class ModelManager {
 
