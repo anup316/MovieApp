@@ -4,7 +4,7 @@ package com.example.anuplal.movieapp.pojo.review;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result {
+public class Review {
 
     @SerializedName("author")
     @Expose
@@ -19,4 +19,19 @@ public class Result {
     @Expose
     public String url;
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

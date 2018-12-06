@@ -1,6 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000">
 
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/txv_movie_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textColor="#FFF"
+        android:textSize="25sp"
+        tools:text="The Incredibles" />
+
+    <TextView
+        android:id="@+id/release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txv_movie_name"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="#A9A9A9"
+        tools:text="11-09-2019" />
+
+    <TextView
+        android:id="@+id/language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txv_movie_name"
+        android:layout_marginStart="20dp"
+
+        android:layout_toEndOf="@id/release_date"
+        android:textColor="#A9A9A9"
+        tools:text=" |      English" />
+
+
+    <RelativeLayout
+        android:id="@+id/lyt_sub_section_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/release_date">
+
+        <ImageView
+            android:id="@+id/img_poster"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+
+
+            />
+
+
+        <TextView
+            android:id="@+id/txv_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toEndOf="@id/img_poster"
+            android:textColor="#FFF"
+            android:textSize="12sp"
+            tools:text="gfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfdf"
+
+
+            />
+
+
+        <Button
+            android:id="@+id/btn_add_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txv_overview"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/img_poster"
+            android:background="#2E77BB"
+            android:padding="10dp"
+            android:text=" + Add to Favourite"
+            android:textColor="#fff"
+
+            />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lyt_sub_section_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lyt_sub_section_1"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="60">
+
+
+        <TextView
+            android:id="@+id/txv_rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:textColor="#ffff00"
+            android:textSize="20sp"
+            tools:text="7/10" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:text="Reviews"
+            android:textColor="#FFF" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:text="Trailer"
+            android:textColor="#FFF" />
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/review_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lyt_sub_section_2"
+        android:layout_marginTop="10dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

@@ -20,6 +20,9 @@ public interface FavouriteMovieDAO {
     @Query("select * from fav_movie_table")
     LiveData<List<FavouriteMovie>> getAllFavouiteMovies();
 
+    @Query("select * from fav_movie_table where movieId = :id")
+    LiveData<FavouriteMovie> getFavouriteMovie(int id);
+
     @Insert(onConflict = REPLACE)
     void addFavouriteMovie(FavouriteMovie movieModel);
 }

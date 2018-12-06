@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.example.anuplal.movieapp.R;
 import com.example.anuplal.movieapp.pojo.Result;
@@ -24,10 +26,13 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
 
     private final List<Result> mMoviePsoterList;
     private final LayoutInflater mInflater;
+    private final OnPosterItemClick mListener;
 
-    PosterAdapter(Context context, List<Result> posterList) {
+    PosterAdapter(Context context, List<Result> posterList, OnPosterItemClick listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mMoviePsoterList = posterList;
+        this.mListener = listener;
+
     }
 
     @Override
@@ -37,9 +42,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-
-        //https://image.tmdb.org/t/p/w500//uyJgTzAsp3Za2TaPiZt2yaKYRIR.jpg
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Result poster = mMoviePsoterList.get(position);
         String builder = "https://image.tmdb.org/t/p/w500/"
                 + poster.getPosterPath();
@@ -61,6 +64,16 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
             }
         });
 
+        holder.ratingBar.setText(String.valueOf(poster.getVoteAverage()));
+        holder.popularity.setText(String.valueOf(poster.getPopularity()));
+        holder.posterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClick(position);
+            }
+        });
+
+
     }
 
 
@@ -72,11 +85,21 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView posterView;
+        TextView ratingBar;
+        TextView popularity;
 
         ViewHolder(View itemView) {
             super(itemView);
             posterView = itemView.findViewById(R.id.posterView);
+            ratingBar = itemView.findViewById(R.id.movie_rating);
+            popularity = itemView.findViewById(R.id.txv_popularity);
+
         }
+    }
+
+    public interface OnPosterItemClick {
+
+        void onClick(int pos);
     }
 
 }

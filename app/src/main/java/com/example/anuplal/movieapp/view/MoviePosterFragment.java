@@ -1,7 +1,11 @@
 package com.example.anuplal.movieapp.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,11 +28,30 @@ public class MoviePosterFragment extends Fragment {
     RecyclerView mRecyclerView;
     private PosterAdapter mAdapter;
     private List<Result> results;
+    private MoviesViewModel viewModel;
+
+    private OnFragmentTransaction mTransactionListener;
+
+
+    public static MoviePosterFragment newInstance() {
+        MoviePosterFragment fragment = new MoviePosterFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentTransaction) {
+            mTransactionListener = (OnFragmentTransaction) context;
+        } else {
+
+            throw new IllegalStateException("Activity needs to implement OnFragmentTransaction");
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_movie_poster, container, false);
         return rootView;
     }
@@ -39,34 +62,65 @@ public class MoviePosterFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.posterListView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.it_hig_rated) {
+            viewModel.sort(2);
+        } else if (item.getItemId() == R.id.it_most_popular) {
+            viewModel.sort(1);
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final MoviesViewModel viewModel =
-                ViewModelProviders.of(this).get(MoviesViewModel.class);
+        if (viewModel == null)
+            viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
 
-        observeViewModel(viewModel);
+        observeViewModel();
     }
 
-    private void observeViewModel(MoviesViewModel viewModel) {
+    private void observeViewModel() {
         // Update the list when the data changes
         viewModel.getTheatreObservable().observe(this, new Observer<List<Result>>() {
             @Override
             public void onChanged(@Nullable List<Result> moviewList) {
                 if (moviewList != null) {
                     results = moviewList;
-                    if (mAdapter == null) {
-                        mAdapter = new PosterAdapter(getContext(), results);
-                        mRecyclerView.setAdapter(mAdapter);
-                    } else {
-                        results.addAll(moviewList);
-                        mAdapter.notifyDataSetChanged();
-                    }
-
+                    mAdapter = new PosterAdapter(getContext(), results, posterClickEvent);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
+
             }
         });
+    }
+
+    private PosterAdapter.OnPosterItemClick posterClickEvent = new PosterAdapter.OnPosterItemClick() {
+        @Override
+        public void onClick(int pos) {
+            mTransactionListener.onInteraction(results.get(pos));
+        }
+    };
+
+
+    public interface OnFragmentTransaction {
+
+        void onInteraction(Result result);
+
+        void setToolbarBackEnabled(boolean isBack);
     }
 }

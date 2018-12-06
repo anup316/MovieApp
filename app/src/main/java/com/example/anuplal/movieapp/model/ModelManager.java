@@ -16,18 +16,38 @@ public class ModelManager {
     ApiServiceProvider mProvider;
     AppDatabase mDatabase;
 
-    ModelManager(Application application) {
+    private static ModelManager INSTANCE;
+
+
+    private ModelManager(Application application) {
         mProvider = ApiServiceProvider.getInstance();
         mDatabase = AppDatabase.getDatabase(application);
     }
 
+    public static synchronized ModelManager getInstance(Application application) {
 
-    LiveData<List<Result>> getMovies(){
+        if (INSTANCE == null) {
+            INSTANCE = new ModelManager(application);
+        }
+
+        return INSTANCE;
+    }
+
+
+    LiveData<List<Result>> getMovies() {
         return null;
     }
 
-    void addToFavourite(FavouriteMovie favouriteMovie){
+    public void addToFavourite(FavouriteMovie favouriteMovie) {
         mDatabase.movieModel().addFavouriteMovie(favouriteMovie);
+    }
+
+    public LiveData<FavouriteMovie> getFavouriteMovie(int id) {
+       return mDatabase.movieModel().getFavouriteMovie(id);
+    }
+
+    public LiveData<List<FavouriteMovie>> getAllMovies() {
+        return mDatabase.movieModel().getAllFavouiteMovies();
     }
 
 

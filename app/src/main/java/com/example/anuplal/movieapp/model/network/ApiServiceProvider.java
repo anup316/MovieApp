@@ -3,10 +3,11 @@ package com.example.anuplal.movieapp.model.network;
 
 import com.example.anuplal.movieapp.pojo.Result;
 import com.example.anuplal.movieapp.pojo.TheatreResult;
+import com.example.anuplal.movieapp.pojo.review.Review;
+import com.example.anuplal.movieapp.pojo.review.ReviewResult;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -42,7 +43,7 @@ public class ApiServiceProvider {
 
 
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/discover/")
+                .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -51,7 +52,7 @@ public class ApiServiceProvider {
         return retrofit;
     }
 
-    public LiveData<List<Result>> fetMoviesList(String apiKey) {
+    public MutableLiveData<List<Result>> fetMoviesList(String apiKey) {
         final MutableLiveData<List<Result>> data = new MutableLiveData<>();
 
         movieService.getAllMoviesList(apiKey).enqueue(new Callback<TheatreResult>() {
@@ -66,6 +67,26 @@ public class ApiServiceProvider {
             }
         });
         return data;
+
+    }
+
+
+    public MutableLiveData<List<Review>> fetchReviewList(int movieId, String apiKey) {
+        final MutableLiveData<List<Review>> data = new MutableLiveData<>();
+
+        movieService.getReviews(movieId, apiKey).enqueue(new Callback<ReviewResult>() {
+            @Override
+            public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
+                data.setValue(response.body().getReviews());
+            }
+
+            @Override
+            public void onFailure(Call<ReviewResult> call, Throwable t) {
+
+            }
+        });
+        return data;
+
 
     }
 }
