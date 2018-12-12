@@ -24,20 +24,8 @@ public class MoviePosterActivity extends AppCompatActivity implements MoviePoste
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_poster);
 
-        replaceFragment(MoviePosterFragment.newInstance());
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                List<FavouriteMovie> data = ModelManager.getInstance(getApplication()).getAllMovies().getValue();
-                if (data != null) {
-                    Log.v("Database", String.valueOf(data.size()));
-                }
-
-
-            }
-        }).start();
+        if (savedInstanceState == null)
+            replaceFragment(MoviePosterFragment.newInstance());
 
     }
 
@@ -49,7 +37,7 @@ public class MoviePosterActivity extends AppCompatActivity implements MoviePoste
     @Override
     public void setToolbarBackEnabled(boolean isBack) {
         final ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar!=null){
+        if (supportActionBar != null) {
             supportActionBar.setHomeButtonEnabled(isBack);
             supportActionBar.setDisplayHomeAsUpEnabled(isBack);
         }

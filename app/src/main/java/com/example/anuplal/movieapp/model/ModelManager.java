@@ -42,11 +42,11 @@ public class ModelManager {
         mDatabase.movieModel().addFavouriteMovie(favouriteMovie);
     }
 
-    public LiveData<FavouriteMovie> getFavouriteMovie(int id) {
-       return mDatabase.movieModel().getFavouriteMovie(id);
+    public FavouriteMovie getFavouriteMovie(int id) {
+        return mDatabase.movieModel().getFavouriteMovie(id);
     }
 
-    public LiveData<List<FavouriteMovie>> getAllMovies() {
+    public List<FavouriteMovie> getAllMovies() {
         return mDatabase.movieModel().getAllFavouiteMovies();
     }
 

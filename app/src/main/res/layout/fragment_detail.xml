@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000">
-
+    android:layout_height="wrap_content"
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/txv_movie_name"
@@ -107,20 +108,23 @@
             tools:text="7/10" />
 
         <TextView
+            android:id="@+id/txv_reviews"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="20"
             android:gravity="center"
-            android:text="Reviews"
+            android:text="Fetching Reviews.."
             android:textColor="#FFF" />
 
 
         <TextView
+            android:id="@+id/txv_trailer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="20"
+            android:enabled="false"
             android:gravity="center"
-            android:text="Trailer"
+            android:text="Fetching Trailer.."
             android:textColor="#FFF" />
 
 
@@ -134,5 +138,5 @@
         android:layout_marginTop="10dp">
 
     </androidx.recyclerview.widget.RecyclerView>
-
 </RelativeLayout>
+

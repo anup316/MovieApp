@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.anuplal.movieapp.R;
 import com.example.anuplal.movieapp.pojo.Result;
@@ -25,10 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MoviePosterFragment extends Fragment {
 
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
     private PosterAdapter mAdapter;
     private List<Result> results;
     private MoviesViewModel viewModel;
+
 
     private OnFragmentTransaction mTransactionListener;
 
@@ -62,6 +65,7 @@ public class MoviePosterFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.posterListView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+        mProgressBar = view.findViewById(R.id.progress_bar);
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -103,6 +107,7 @@ public class MoviePosterFragment extends Fragment {
                     results = moviewList;
                     mAdapter = new PosterAdapter(getContext(), results, posterClickEvent);
                     mRecyclerView.setAdapter(mAdapter);
+                    mProgressBar.setVisibility(View.GONE);
                 }
 
             }

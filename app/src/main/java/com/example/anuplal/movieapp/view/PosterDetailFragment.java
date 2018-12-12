@@ -1,6 +1,8 @@
 package com.example.anuplal.movieapp.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.example.anuplal.movieapp.model.ModelManager;
 import com.example.anuplal.movieapp.pojo.FavouriteMovie;
 import com.example.anuplal.movieapp.pojo.Result;
 import com.example.anuplal.movieapp.pojo.review.Review;
+import com.example.anuplal.movieapp.pojo.trailer.Video;
 import com.example.anuplal.movieapp.viewmodel.PosterDetailViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +26,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -39,6 +43,8 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
     private TextView mRating;
     private TextView mReleaseDate;
     private TextView mLanguage;
+    private TextView mReviewHeader;
+    private TextView mTrailerHeader;
     private Button mAddToFavourite;
     private RecyclerView mReviewList;
     private Result result;
@@ -46,6 +52,7 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
     private ReviewAdapter mAdapter;
 
     private MoviePosterFragment.OnFragmentTransaction mTransactionListener;
+    private String key;
 
     public static PosterDetailFragment newInstance(Result result) {
 
@@ -54,6 +61,12 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
         PosterDetailFragment fragment = new PosterDetailFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -86,10 +99,19 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
         mLanguage = view.findViewById(R.id.language);
         mAddToFavourite = view.findViewById(R.id.btn_add_fav);
         mReviewList = view.findViewById(R.id.review_list);
+        mReviewHeader = view.findViewById(R.id.txv_reviews);
+        mTrailerHeader = view.findViewById(R.id.txv_trailer);
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
         mReviewList.setLayoutManager(gridLayoutManager);
         mAddToFavourite.setOnClickListener(this);
         mTransactionListener.setToolbarBackEnabled(true);
+        mTrailerHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + key)));
+            }
+        });
+
     }
 
     @Override
@@ -109,8 +131,7 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
             mLanguage.setText(" |   " + result.getOriginalLanguage());
             PosterDetailViewModel viewModel = ViewModelProviders.of(this).get(PosterDetailViewModel.class);
             observeViewModel(viewModel, result.getId());
-            isFavourite();
-
+            checkDBIfAddedToFavourite();
         }
 
 
@@ -122,15 +143,32 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
             @Override
             public void onChanged(List<Review> reviews) {
                 if (reviews != null) {
-
-                    if (mAdapter == null) {
-                        mAdapter = new ReviewAdapter(getContext(), reviews);
-                        mReviewList.setAdapter(mAdapter);
-                    } else {
-                        mAdapter.notifyDataSetChanged();
-                    }
+                    mAdapter = new ReviewAdapter(getContext(), reviews);
+                    mReviewList.setAdapter(mAdapter);
+                    mReviewHeader.setText("(" + reviews.size() + ") Reviews ");
 
                 }
+            }
+        });
+
+        viewModel.getVideoList(id).observe(this, new Observer<List<Video>>() {
+            @Override
+            public void onChanged(List<Video> videos) {
+
+                if (videos != null && videos.size() > 0) {
+                    //Taking first object to play video. Not showing list.
+                    key = videos.get(0).getKey();
+                    if (key != null) {
+                        mTrailerHeader.setText(getString(R.string.watch_now));
+                        mTrailerHeader.setEnabled(true);
+                    } else {
+                        mTrailerHeader.setText(getString(R.string.no_trailer));
+                    }
+
+                } else {
+                    mTrailerHeader.setText(getString(R.string.no_trailer));
+                }
+
             }
         });
 
@@ -145,22 +183,33 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
                 ModelManager.getInstance(getActivity().getApplication()).addToFavourite(new FavouriteMovie(result.getId(), result.getOriginalTitle()));
             }
         }).start();
+        setButtonColor(true);
 
     }
 
-    boolean isFavourite() {
+    void checkDBIfAddedToFavourite() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final LiveData<FavouriteMovie> favouriteMovie =
+                final FavouriteMovie favouriteMovie =
                         ModelManager.getInstance(getActivity().getApplication()).getFavouriteMovie(result.getId());
-
-
+                setButtonColor(favouriteMovie != null);
             }
         }).start();
 
-        return true;
     }
 
+    private void setButtonColor(boolean isAddedToFavourite) {
+        if (isAddedToFavourite) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAddToFavourite.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+                    mAddToFavourite.setText(getString(R.string.added_fav));
+                    mAddToFavourite.setEnabled(false);
+                }
+            });
+        }
+    }
 
 }

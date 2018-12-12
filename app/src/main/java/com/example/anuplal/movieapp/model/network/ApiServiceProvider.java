@@ -5,6 +5,8 @@ import com.example.anuplal.movieapp.pojo.Result;
 import com.example.anuplal.movieapp.pojo.TheatreResult;
 import com.example.anuplal.movieapp.pojo.review.Review;
 import com.example.anuplal.movieapp.pojo.review.ReviewResult;
+import com.example.anuplal.movieapp.pojo.trailer.Video;
+import com.example.anuplal.movieapp.pojo.trailer.VideoResult;
 
 import java.util.List;
 
@@ -82,6 +84,25 @@ public class ApiServiceProvider {
 
             @Override
             public void onFailure(Call<ReviewResult> call, Throwable t) {
+
+            }
+        });
+        return data;
+
+
+    }
+
+    public MutableLiveData<List<Video>> fetchVideos(int movieId, String apiKey) {
+        final MutableLiveData<List<Video>> data = new MutableLiveData<>();
+
+        movieService.getVideos(movieId, apiKey).enqueue(new Callback<VideoResult>() {
+            @Override
+            public void onResponse(Call<VideoResult> call, Response<VideoResult> response) {
+                data.setValue(response.body().getVideos());
+            }
+
+            @Override
+            public void onFailure(Call<VideoResult> call, Throwable t) {
 
             }
         });

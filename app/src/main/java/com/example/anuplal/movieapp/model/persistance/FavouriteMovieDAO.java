@@ -1,7 +1,6 @@
 package com.example.anuplal.movieapp.model.persistance;
 
 
-
 import com.example.anuplal.movieapp.pojo.FavouriteMovie;
 
 import java.util.List;
@@ -18,10 +17,10 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 public interface FavouriteMovieDAO {
 
     @Query("select * from fav_movie_table")
-    LiveData<List<FavouriteMovie>> getAllFavouiteMovies();
+    List<FavouriteMovie> getAllFavouiteMovies();
 
     @Query("select * from fav_movie_table where movieId = :id")
-    LiveData<FavouriteMovie> getFavouriteMovie(int id);
+    FavouriteMovie getFavouriteMovie(int id);
 
     @Insert(onConflict = REPLACE)
     void addFavouriteMovie(FavouriteMovie movieModel);
