@@ -66,6 +66,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
 
         holder.ratingBar.setText(String.valueOf(poster.getVoteAverage()));
         holder.popularity.setText(String.valueOf(poster.getPopularity()));
+       holder.favourite.setVisibility(poster.isFavourite() ? View.VISIBLE : View.INVISIBLE);
         holder.posterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,12 +88,14 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
         ImageView posterView;
         TextView ratingBar;
         TextView popularity;
+        TextView favourite;
 
         ViewHolder(View itemView) {
             super(itemView);
             posterView = itemView.findViewById(R.id.posterView);
             ratingBar = itemView.findViewById(R.id.movie_rating);
             popularity = itemView.findViewById(R.id.txv_popularity);
+            favourite = itemView.findViewById(R.id.txv_fav);
 
         }
     }

@@ -17,7 +17,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 public interface FavouriteMovieDAO {
 
     @Query("select * from fav_movie_table")
-    List<FavouriteMovie> getAllFavouiteMovies();
+    LiveData<List<FavouriteMovie>> getAllFavouiteMovies();
 
     @Query("select * from fav_movie_table where movieId = :id")
     FavouriteMovie getFavouriteMovie(int id);

@@ -53,6 +53,8 @@ public class Result implements Parcelable {
     @Expose
     private String releaseDate;
 
+    private boolean isFavourite;
+
     protected Result(Parcel in) {
         voteCount = in.readInt();
         id = in.readInt();
@@ -68,6 +70,7 @@ public class Result implements Parcelable {
         adult = tmpAdult == 0 ? null : tmpAdult == 1;
         overview = in.readString();
         releaseDate = in.readString();
+        isFavourite = in.readByte() != 0;
     }
 
     public static final Creator<Result> CREATOR = new Creator<Result>() {
@@ -82,6 +85,29 @@ public class Result implements Parcelable {
         }
     };
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(voteCount);
+        dest.writeInt(id);
+        dest.writeByte((byte) (video ? 1 : 0));
+        dest.writeFloat(voteAverage);
+        dest.writeString(title);
+        dest.writeFloat(popularity);
+        dest.writeString(posterPath);
+        dest.writeString(originalLanguage);
+        dest.writeString(originalTitle);
+        dest.writeString(backdropPath);
+        dest.writeByte((byte) (adult == null ? 0 : adult ? 1 : 2));
+        dest.writeString(overview);
+        dest.writeString(releaseDate);
+        dest.writeByte((byte) (isFavourite ? 1 : 0));
+    }
+
     public int getVoteCount() {
         return voteCount;
     }
@@ -90,7 +116,7 @@ public class Result implements Parcelable {
         return id;
     }
 
-    public boolean getVideo() {
+    public boolean isVideo() {
         return video;
     }
 
@@ -138,25 +164,11 @@ public class Result implements Parcelable {
         return releaseDate;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public boolean isFavourite() {
+        return isFavourite;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(voteCount);
-        dest.writeInt(id);
-        dest.writeByte((byte) (video ? 1 : 0));
-        dest.writeFloat(voteAverage);
-        dest.writeString(title);
-        dest.writeFloat(popularity);
-        dest.writeString(posterPath);
-        dest.writeString(originalLanguage);
-        dest.writeString(originalTitle);
-        dest.writeString(backdropPath);
-        dest.writeByte((byte) (adult == null ? 0 : adult ? 1 : 2));
-        dest.writeString(overview);
-        dest.writeString(releaseDate);
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
     }
 }

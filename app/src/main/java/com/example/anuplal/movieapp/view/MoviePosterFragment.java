@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.anuplal.movieapp.Constants;
 import com.example.anuplal.movieapp.R;
+import com.example.anuplal.movieapp.pojo.FavouriteMovie;
 import com.example.anuplal.movieapp.pojo.Result;
 import com.example.anuplal.movieapp.viewmodel.MoviesViewModel;
 
@@ -34,6 +36,7 @@ public class MoviePosterFragment extends Fragment {
 
 
     private OnFragmentTransaction mTransactionListener;
+    private boolean isMerged;
 
 
     public static MoviePosterFragment newInstance() {
@@ -80,9 +83,11 @@ public class MoviePosterFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.it_hig_rated) {
-            viewModel.sort(2);
+            viewModel.sort(Constants.CATEGORY.HIGHTLYRATED);
         } else if (item.getItemId() == R.id.it_most_popular) {
-            viewModel.sort(1);
+            viewModel.sort(Constants.CATEGORY.MOSTPOPULAR);
+        } else if (item.getItemId() == R.id.it_fav_movie) {
+            viewModel.sort(Constants.CATEGORY.FAVOURITE);
         }
 
         return super.onOptionsItemSelected(item);
@@ -105,11 +110,25 @@ public class MoviePosterFragment extends Fragment {
             public void onChanged(@Nullable List<Result> moviewList) {
                 if (moviewList != null) {
                     results = moviewList;
+                    mProgressBar.setVisibility(View.GONE);
                     mAdapter = new PosterAdapter(getContext(), results, posterClickEvent);
                     mRecyclerView.setAdapter(mAdapter);
-                    mProgressBar.setVisibility(View.GONE);
+                    if (!isMerged)
+                        observeDAO();
                 }
 
+            }
+        });
+
+
+    }
+
+    void observeDAO() {
+        viewModel.getAllFavouriteMovieObservable().observe(this, new Observer<List<FavouriteMovie>>() {
+            @Override
+            public void onChanged(List<FavouriteMovie> favouriteMovies) {
+                viewModel.mergeList();
+                isMerged = true;
             }
         });
     }

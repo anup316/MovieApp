@@ -1,21 +1,15 @@
 package com.example.anuplal.movieapp.view;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.anuplal.movieapp.R;
-import com.example.anuplal.movieapp.model.ModelManager;
-import com.example.anuplal.movieapp.pojo.FavouriteMovie;
 import com.example.anuplal.movieapp.pojo.Result;
-
-import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
 
 public class MoviePosterActivity extends AppCompatActivity implements MoviePosterFragment.OnFragmentTransaction {
 
