@@ -3,4 +3,6 @@
     <string name="added_fav"> \u2713 Added to favourites </string>
     <string name="watch_now">Watch now \u21E8</string>
     <string name="no_trailer">No trailer</string>
+    <string name="add_fav"> + Add to Favourite</string>
+
 </resources>

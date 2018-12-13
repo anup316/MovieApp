@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -52,7 +55,7 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
     private MoviePosterFragment.OnFragmentTransaction mTransactionListener;
     private String key;
 
-    public static PosterDetailFragment newInstance(Result result) {
+    static PosterDetailFragment newInstance(Result result) {
 
         Bundle args = new Bundle();
         args.putParcelable("data", result);
@@ -61,10 +64,29 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
         return fragment;
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            mTransactionListener.setToolbarBackEnabled(false);
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -106,8 +128,7 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
         mTrailerHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Launching intent
-
+                //Launching intent for youtube app.
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + key)));
 
             }
@@ -177,7 +198,7 @@ public class PosterDetailFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getContext(), "Added to favourite", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), getString(R.string.added_fav), Toast.LENGTH_LONG).show();
         new Thread(new Runnable() {
             @Override
             public void run() {

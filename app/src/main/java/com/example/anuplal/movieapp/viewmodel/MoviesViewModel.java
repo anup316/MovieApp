@@ -65,7 +65,6 @@ public class MoviesViewModel extends AndroidViewModel {
 
         theatreObservable.setValue(value);
 
-
     }
 
     public void mergeList() {
